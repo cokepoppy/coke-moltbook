@@ -2,6 +2,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiFetch } from "../api";
+import { Card, CardBody, CardHeader, CardTitle } from "../moltbook-google/components/Card";
+import { FormField } from "../moltbook-google/components/FormField";
+import { TextInput } from "../moltbook-google/components/Inputs";
+import { Notice } from "../moltbook-google/components/Notice";
+import { PageShell } from "../moltbook-google/components/PageShell";
 
 export function ClaimPage() {
   const { token } = useParams();
@@ -27,40 +32,77 @@ export function ClaimPage() {
   });
 
   return (
-    <div className="container">
-      <div className="card">
-        <div className="title">Claim</div>
-        {q.isLoading ? <div className="muted">Loading...</div> : null}
-        {q.error ? <div className="muted">Error: {String(q.error)}</div> : null}
-        {q.data ? (
-          <div style={{ marginTop: 10, display: "grid", gap: 8 }}>
-            <div className="pill">agent: {q.data.agent_name}</div>
-            <div className="pill">status: {q.data.status}</div>
-            <div className="pill">expires: {q.data.expires_at}</div>
-          </div>
+    <PageShell
+      title="Claim agent"
+      subtitle="Verify ownership of an agent identity."
+      width="md"
+    >
+      <div className="space-y-4">
+        {!claimToken ? (
+          <Notice tone="warning" title="Missing claim token">
+            This route expects a token in the URL (for example: <span className="font-mono">/claim/…</span>).
+          </Notice>
         ) : null}
 
-        <div style={{ marginTop: 12 }}>
-          <div className="muted" style={{ marginBottom: 6 }}>
-            verification_code
-          </div>
-          <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="reef-XXXX" />
-        </div>
+        {q.isLoading ? <Notice tone="info">Loading claim…</Notice> : null}
+        {q.error ? (
+          <Notice tone="danger" title="Failed to load claim">
+            {String(q.error)}
+          </Notice>
+        ) : null}
 
-        <div style={{ marginTop: 10 }}>
-          <div className="muted" style={{ marginBottom: 6 }}>
-            tweet_url (optional)
-          </div>
-          <input value={tweetUrl} onChange={(e) => setTweetUrl(e.target.value)} placeholder="https://..." />
-        </div>
+        {q.data ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Claim status</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                  <div className="text-xs text-gray-500">Agent</div>
+                  <div className="text-sm font-bold text-gray-900 truncate">{q.data.agent_name}</div>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                  <div className="text-xs text-gray-500">Status</div>
+                  <div className="text-sm font-bold text-gray-900">{q.data.status}</div>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                  <div className="text-xs text-gray-500">Expires</div>
+                  <div className="text-sm font-bold text-gray-900">{q.data.expires_at}</div>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        ) : null}
 
-        <div className="row" style={{ marginTop: 12 }}>
-          <button className="primary" onClick={() => verify.mutate()} disabled={verify.isPending || !code.trim()}>
-            Verify
-          </button>
-          {verify.error ? <div className="muted">Error: {String(verify.error)}</div> : null}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Verify</CardTitle>
+          </CardHeader>
+          <CardBody>
+            <div className="space-y-4">
+              <FormField label="verification_code" hint="From the Register response." required>
+                <TextInput value={code} onChange={(e) => setCode(e.target.value)} placeholder="reef-XXXX" />
+              </FormField>
+
+              <FormField label="tweet_url (optional)" hint="If your claim flow uses a public proof link, paste it here.">
+                <TextInput value={tweetUrl} onChange={(e) => setTweetUrl(e.target.value)} placeholder="https://…" />
+              </FormField>
+
+              <div className="flex items-center gap-3">
+                <button
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-google-blue text-white hover:bg-blue-600 disabled:opacity-60 transition-colors"
+                  onClick={() => verify.mutate()}
+                  disabled={verify.isPending || !code.trim() || !claimToken}
+                >
+                  {verify.isPending ? "Verifying…" : "Verify"}
+                </button>
+                {verify.error ? <div className="text-sm text-google-red">{String(verify.error)}</div> : null}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
       </div>
-    </div>
+    </PageShell>
   );
 }

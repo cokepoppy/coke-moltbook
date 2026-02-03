@@ -2,6 +2,11 @@ import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { apiFetch } from "../api";
+import { Card, CardBody, CardHeader, CardTitle } from "../moltbook-google/components/Card";
+import { FormField } from "../moltbook-google/components/FormField";
+import { TextArea } from "../moltbook-google/components/Inputs";
+import { Notice } from "../moltbook-google/components/Notice";
+import { PageShell } from "../moltbook-google/components/PageShell";
 
 type Msg = {
   id: string;
@@ -44,51 +49,95 @@ export function DmConversationPage() {
   }, [q.data]);
 
   useEffect(() => {
-    const t = setInterval(() => {
+    if (!convId) return;
+    const t = window.setInterval(() => {
       void q.refetch();
     }, 5000);
-    return () => clearInterval(t);
-  }, [q]);
+    return () => window.clearInterval(t);
+  }, [convId, q.refetch]);
 
   return (
-    <div className="container">
-      <div className="row" style={{ marginBottom: 12 }}>
-        <Link to="/dm" className="pill">
-          ← back
+    <PageShell
+      title="Conversation"
+      subtitle={convId ? `Conversation id: ${convId}` : "Loading conversation…"}
+      width="md"
+      actions={
+        <Link
+          to="/dm"
+          className="px-3 py-2 rounded-lg text-sm font-semibold bg-white border border-gray-200 text-gray-800 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+        >
+          ← Back
         </Link>
-        <div className="pill">conversation: {convId}</div>
-        <div className="spacer" />
-        <button onClick={() => q.fetchNextPage()} disabled={!q.hasNextPage || q.isFetchingNextPage}>
-          {q.isFetchingNextPage ? "Loading..." : q.hasNextPage ? "Load older" : "No more"}
-        </button>
-      </div>
+      }
+    >
+      <div className="space-y-4">
+        {q.error ? (
+          <Notice tone="danger" title="Failed to load messages">
+            {String(q.error)}
+          </Notice>
+        ) : null}
 
-      {q.error ? <div className="card">Error: {String(q.error)}</div> : null}
+        <Card>
+          <CardHeader className="flex items-center justify-between">
+            <CardTitle>Messages</CardTitle>
+            <button
+              className="px-3 py-2 rounded-lg text-sm font-semibold bg-white border border-gray-200 text-gray-800 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 transition-colors"
+              onClick={() => q.fetchNextPage()}
+              disabled={!q.hasNextPage || q.isFetchingNextPage}
+            >
+              {q.isFetchingNextPage ? "Loading…" : q.hasNextPage ? "Load older" : "No more"}
+            </button>
+          </CardHeader>
+          <CardBody>
+            <div className="space-y-3">
+              {items.map((m) => (
+                <div key={m.id} className="flex gap-3">
+                  <div className="w-9 h-9 shrink-0 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-bold text-gray-600">
+                    {m.sender.name.slice(0, 1).toUpperCase()}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className="text-sm font-bold text-gray-900">{m.sender.name}</div>
+                      <div className="text-[11px] text-gray-400">{new Date(m.created_at).toLocaleString()}</div>
+                    </div>
+                    <div className="mt-1 whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">{m.message}</div>
+                  </div>
+                </div>
+              ))}
 
-      <div style={{ display: "grid", gap: 8 }}>
-        {items.map((m) => (
-          <div key={m.id} className="card">
-            <div className="row">
-              <div className="pill">{m.sender.name}</div>
-              <div className="spacer" />
-              <div className="muted" style={{ fontSize: 12 }}>
-                {new Date(m.created_at).toLocaleString()}
+              {q.isLoading ? <div className="text-sm text-gray-600">Loading…</div> : null}
+              {q.data && items.length === 0 ? (
+                <Notice tone="info" title="No messages yet">
+                  Send the first message below.
+                </Notice>
+              ) : null}
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Send</CardTitle>
+          </CardHeader>
+          <CardBody>
+            <div className="space-y-3">
+              <FormField label="Message" required>
+                <TextArea value={text} onChange={(e) => setText(e.target.value)} rows={4} placeholder="Write a message…" />
+              </FormField>
+              <div className="flex items-center gap-3">
+                <button
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-google-blue text-white hover:bg-blue-600 disabled:opacity-60 transition-colors"
+                  onClick={() => send.mutate()}
+                  disabled={!text.trim() || send.isPending}
+                >
+                  {send.isPending ? "Sending…" : "Send"}
+                </button>
+                {send.error ? <div className="text-sm text-google-red">{String(send.error)}</div> : null}
               </div>
             </div>
-            <div style={{ marginTop: 8, whiteSpace: "pre-wrap" }}>{m.message}</div>
-          </div>
-        ))}
+          </CardBody>
+        </Card>
       </div>
-
-      <div className="card" style={{ marginTop: 12 }}>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} placeholder="Message..." />
-        <div className="row" style={{ marginTop: 10 }}>
-          <button className="primary" onClick={() => send.mutate()} disabled={!text.trim() || send.isPending}>
-            Send
-          </button>
-          {send.error ? <div className="muted">Error: {String(send.error)}</div> : null}
-        </div>
-      </div>
-    </div>
+    </PageShell>
   );
 }

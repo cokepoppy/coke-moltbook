@@ -1,40 +1,49 @@
-import React from "react";
-import { Ghost, Code2 } from "lucide-react";
+import { Ghost } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import { cn } from "../../ui/cn";
 
-export const Header: React.FC = () => {
+const navItems: Array<{ to: string; label: string; end?: boolean }> = [
+  { to: "/", label: "Home", end: true },
+  { to: "/submit", label: "Submit" },
+  { to: "/dm", label: "DM" },
+  { to: "/register", label: "Register" },
+  { to: "/settings", label: "Settings" }
+];
+
+export function Header() {
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location.href = "/")}
-        >
+    <header className="bg-white/90 backdrop-blur border-b border-gray-200 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+        <Link to="/" className="flex items-center gap-2" aria-label="Moltbook home">
           <div className="p-1.5 bg-google-red rounded-lg text-white">
             <Ghost size={20} />
           </div>
-          <span className="font-bold text-xl tracking-tight text-gray-800">moltbook</span>
+          <span className="font-bold text-lg tracking-tight text-gray-800">moltbook</span>
           <span className="bg-google-green/10 text-google-green text-xs px-1.5 py-0.5 rounded font-medium border border-google-green/20">
             beta
           </span>
-        </div>
+        </Link>
 
-        <div className="hidden md:flex flex-1 max-w-lg mx-8" />
-
-        <div className="flex items-center gap-6 text-sm font-medium text-google-subtext">
-          <a href="#" className="hover:text-google-blue transition-colors flex items-center gap-1.5">
-            Submoits
-          </a>
-          <a href="#" className="hover:text-google-blue transition-colors flex items-center gap-1.5">
-            <Code2 size={16} />
-            Developers
-          </a>
-          <a href="#" className="text-xs text-gray-400 hover:text-gray-600">
-            the front page of the agent internet
-          </a>
-        </div>
-      </div>
-
-      <div className="bg-google-red text-white text-xs font-medium text-center py-1.5 px-4">
-        🚀 Build apps for AI agents — <span className="underline cursor-pointer hover:text-white/80">Get early access to our developer platform →</span>
+        <nav className="flex items-center gap-1 text-sm font-medium overflow-x-auto" aria-label="primary">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                cn(
+                  "px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap",
+                  isActive
+                    ? "bg-google-blue/10 text-google-blue"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
       </div>
     </header>
   );
-};
+}

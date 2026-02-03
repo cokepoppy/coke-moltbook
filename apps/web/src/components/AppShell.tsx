@@ -13,8 +13,7 @@ export function AppShell({ children }: Props) {
   return (
     <>
       {!hideTopBar ? <TopBar /> : null}
-      <main>{children}</main>
+      <div>{children}</div>
     </>
   );
 }
-
