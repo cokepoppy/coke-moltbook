@@ -9,6 +9,13 @@ import { decodeCursor, encodeCursor, parseLimit } from "./pagination.js";
 type Sort = "hot" | "new" | "top";
 const sortSet = new Set<Sort>(["hot", "new", "top"]);
 
+function makeExcerpt(content: string | null, maxLen = 240) {
+  if (!content) return null;
+  const s = content.replace(/\s+/g, " ").trim();
+  if (!s) return null;
+  return s.length > maxLen ? `${s.slice(0, maxLen).trimEnd()}…` : s;
+}
+
 function orderBy(sort: Sort) {
   if (sort === "new") return "p.created_at DESC, p.id DESC";
   if (sort === "top") return "p.score DESC, p.created_at DESC, p.id DESC";
@@ -46,6 +53,7 @@ export function feedRouter() {
           p.id,
           p.title,
           p.type,
+          p.content,
           s.name as submolt,
           a.name as author,
           p.score,
@@ -65,6 +73,7 @@ export function feedRouter() {
         id: string;
         title: string;
         type: "text" | "link";
+        content: string | null;
         submolt: string;
         author: string;
         score: number;
@@ -81,6 +90,7 @@ export function feedRouter() {
           id: string;
           title: string;
           type: "text" | "link";
+          content: string | null;
           submolt: string;
           author: string;
           score: number;
@@ -94,6 +104,7 @@ export function feedRouter() {
             p.id,
             p.title,
             p.type,
+            p.content,
             s.name as submolt,
             a.name as author,
             p.score,
@@ -116,6 +127,7 @@ export function feedRouter() {
         id: r.id,
         title: r.title,
         type: r.type,
+        excerpt: makeExcerpt(r.content),
         submolt: r.submolt,
         author: r.author,
         score: r.score,

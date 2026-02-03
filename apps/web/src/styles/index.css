@@ -3,3 +3,17 @@
 @import "./primitives.css";
 @import "./pages.css";
 
+/* Keep existing CSS vars + legacy pages styling for now (will be cleaned after full UI swap). */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #f8f9fa;
+}
+

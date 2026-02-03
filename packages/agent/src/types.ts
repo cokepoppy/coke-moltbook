@@ -14,6 +14,7 @@ export type FeedItem = {
   id: string;
   title: string;
   type: "text" | "link";
+  excerpt: string | null;
   submolt: string;
   author: string;
   score: number;

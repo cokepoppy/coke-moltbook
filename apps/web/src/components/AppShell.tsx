@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLocation } from "react-router-dom";
 import { TopBar } from "./TopBar";
 
 type Props = {
@@ -6,9 +7,12 @@ type Props = {
 };
 
 export function AppShell({ children }: Props) {
+  const loc = useLocation();
+  const hideTopBar = loc.pathname === "/" || loc.pathname.startsWith("/post/");
+
   return (
     <>
-      <TopBar />
+      {!hideTopBar ? <TopBar /> : null}
       <main>{children}</main>
     </>
   );
