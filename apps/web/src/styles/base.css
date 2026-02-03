@@ -1,0 +1,98 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--g-bg);
+  color: var(--g-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(26, 115, 232, 0.18);
+}
+
+.container,
+.g-container {
+  max-width: var(--g-container-max);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.row,
+.g-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.spacer,
+.g-spacer {
+  flex: 1;
+}
+
+.muted,
+.g-muted {
+  color: var(--g-muted);
+}
+
+.title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.g-h1 {
+  font-size: 34px;
+  line-height: 40px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.g-h2 {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 650;
+  margin: 0;
+}
+
+.g-body {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.g-meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--g-muted);
+}
+
+.g-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 18px;
+}
+
