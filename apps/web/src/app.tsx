@@ -1,6 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
-import { FeedPage } from "./pages/feed";
 import { HomePage } from "./pages/home";
 import { PostPage } from "./pages/post";
 import { SubmitPage } from "./pages/submit";
@@ -15,7 +14,7 @@ export function App() {
     <AppShell>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/feed" element={<FeedPage />} />
+        <Route path="/feed" element={<Navigate to="/" replace />} />
         <Route path="/post/:id" element={<PostPage />} />
         <Route path="/submit" element={<SubmitPage />} />
         <Route path="/register" element={<RegisterPage />} />
