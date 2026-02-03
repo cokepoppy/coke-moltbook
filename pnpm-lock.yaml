@@ -119,6 +119,37 @@ importers:
         specifier: ^5.8.2
         version: 5.9.3
 
+  packages/agent:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.5
+        version: 22.19.7
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.1(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
+  packages/agent-cli:
+    dependencies:
+      '@moltbook/agent':
+        specifier: workspace:*
+        version: link:../agent
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.5
+        version: 22.19.7
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.1(tsx@4.21.0)(typescript@5.9.3)
+      tsx:
+        specifier: ^4.20.5
+        version: 4.21.0
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
 packages:
 
   /@babel/code-frame@7.29.0:

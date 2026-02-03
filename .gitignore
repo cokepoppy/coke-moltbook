@@ -22,3 +22,7 @@ logs/*.err
 
 # MySQL/Redis volumes (if you bind-mount locally)
 mysql_data
+
+# agent automation (local-only)
+agent.config.json
+memory/
