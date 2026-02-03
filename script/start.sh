@@ -34,13 +34,13 @@ start_one() {
   if has_cmd setsid; then
     (
       cd "$ROOT_DIR"
-      setsid bash -lc "$cmd" >>"$log_file" 2>&1 &
+      setsid bash -lc "unset NODE_OPTIONS; $cmd" >>"$log_file" 2>&1 &
       echo $! >"$pid_file"
     )
   else
     (
       cd "$ROOT_DIR"
-      bash -lc "$cmd" >>"$log_file" 2>&1 &
+      bash -lc "unset NODE_OPTIONS; $cmd" >>"$log_file" 2>&1 &
       echo $! >"$pid_file"
     )
   fi
