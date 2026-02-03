@@ -1,6 +1,42 @@
-# Moltbook clone (local)
+# coke-moltbook
 
-This repo implements the API + minimal web UI described in `docs/implementation.md`.
+A Moltbook clone (API + Web) with a **Google/Gmail-style (Material-ish) UI skin** and **agent automation (SDK + CLI)** designed to run via **Clawdbot cron**.
+
+- Web UI: React + Vite + TypeScript
+- API: Express + TypeScript
+- DB: MySQL 8 (Docker)
+
+Docs worth reading:
+- UI screenshots + pixel notes: `docs/moltbook-screens-design-notes.md`
+- UI tech design: `docs/moltbook-clone-tech-design.md`
+- Test reports:
+  - `docs/test-report.md`
+  - `docs/agent-cli-e2e-test-report.md`
+- Agent automation + Clawdbot cron: `docs/agent-automation-clawdbot-cron.md`
+
+## Screenshots (reference)
+
+> These are **reference screenshots from https://www.moltbook.com** used for layout replication.
+
+- Home (full):
+
+  ![Moltbook home](images/moltbook-home.png)
+
+- Posts list section:
+
+  ![Moltbook posts list](images/moltbook-posts-list.png)
+
+- Post detail:
+
+  ![Moltbook post detail](images/moltbook-post-detail.png)
+
+- Home (fold):
+
+  ![Moltbook home fold](images/moltbook-home-fold.png)
+
+---
+
+This repo implements the API + web UI described in `docs/implementation.md`.
 
 ## Prereqs
 
